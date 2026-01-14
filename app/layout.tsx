@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { DM_Sans, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
-import { siteConfig, chatWidgetConfig } from '@/lib/constants';
-import Script from 'next/script';
+import { siteConfig } from '@/lib/constants';
 import { ConsentProvider } from '@/lib/useConsent';
 import { CookieConsent } from '@/components/CookieConsent';
 import './globals.css';
@@ -84,8 +83,11 @@ export const metadata: Metadata = {
   
   // Icons
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
     apple: '/apple-touch-icon.png',
   },
   
@@ -144,10 +146,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         
-        {/* Preconnect to external domains for performance */}
-        <link rel="preconnect" href="https://botdisplay.com" />
-        <link rel="dns-prefetch" href="https://botdisplay.com" />
-      </head>
+        </head>
       
       <body className="font-sans">
         <ConsentProvider>
@@ -156,25 +155,6 @@ export default function RootLayout({
           {/* Cookie Consent Banner */}
           <CookieConsent />
         </ConsentProvider>
-
-        {/* ============================================================== */}
-        {/* CHAT WIDGET - BotDisplay */}
-        {/* ============================================================== */}
-        <Script
-          src={chatWidgetConfig.src}
-          strategy="lazyOnload"
-          data-color={chatWidgetConfig.color}
-          data-assistant-id={chatWidgetConfig.assistantId}
-          data-account-id={chatWidgetConfig.accountId}
-          data-position={chatWidgetConfig.position}
-          data-theme={chatWidgetConfig.theme}
-          data-show-prompt={chatWidgetConfig.showPrompt.toString()}
-          data-prompt-message={chatWidgetConfig.promptMessage}
-          data-startup-message={chatWidgetConfig.startupMessage}
-          data-assistant-name={chatWidgetConfig.assistantName}
-          data-button-icon={chatWidgetConfig.buttonIcon}
-          data-greeting-message={chatWidgetConfig.greetingMessage}
-        />
 
         {/* ============================================================== */}
         {/* ANALYTICS - Loaded dynamically by useConsent based on user consent */}

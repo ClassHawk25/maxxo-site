@@ -69,6 +69,13 @@ export function Navigation() {
                 <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-accent transition-all duration-300 ease-out group-hover:w-full" />
               </a>
             ))}
+            {/* Log In Button */}
+            <a
+              href="https://app.maxxo.ai"
+              className="px-5 py-2.5 text-sm font-medium text-foreground border border-border rounded-xl hover:bg-muted/50 transition-colors"
+            >
+              Log In
+            </a>
             {/* CTA Button with pulse glow */}
             <Button onClick={navigateToDemo} className="animate-pulse-glow">
               Book a Demo
@@ -118,9 +125,18 @@ export function Navigation() {
                     {link.label}
                   </a>
                 ))}
-                <Button onClick={navigateToDemo} className="mt-4 w-full">
-                  Book a Demo
-                </Button>
+                <div className="flex flex-col gap-3 mt-4">
+                  <a
+                    href="https://app.maxxo.ai"
+                    className="w-full px-5 py-2.5 text-center text-sm font-medium text-foreground border border-border rounded-xl hover:bg-muted/50 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Log In
+                  </a>
+                  <Button onClick={navigateToDemo} className="w-full">
+                    Book a Demo
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
