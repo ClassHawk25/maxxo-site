@@ -39,6 +39,7 @@ export function Footer() {
         <div className="mt-8 pt-8 border-t border-border flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
           <a href="/privacy-policy" className="hover:text-accent transition-colors">Privacy Policy</a>
           <a href="/cookie-policy" className="hover:text-accent transition-colors">Cookie Policy</a>
+          <a href="/legal" className="hover:text-accent transition-colors">Sub-processors</a>
           <CookieSettingsButton />
         </div>
       </div>
