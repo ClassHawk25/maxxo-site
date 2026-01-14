@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { Logo } from './Logo';
+import Image from 'next/image';
 import { Button } from './ui/Button';
 import { cn } from '@/lib/utils';
 
@@ -12,35 +12,31 @@ import { cn } from '@/lib/utils';
 // ============================================================================
 
 const navLinks = [
-  { href: '#platform', label: 'Platform' },
-  { href: '#solution', label: 'Solution' },
-  { href: '#team', label: 'About' },
+  { href: '/#team', label: 'About' },
 ];
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
-  const scrollToDemo = () => {
-    const demoSection = document.getElementById('demo');
-    if (demoSection) {
-      demoSection.scrollIntoView({ behavior: 'smooth' });
-    }
+
+  const navigateToDemo = () => {
     setMobileMenuOpen(false);
+    // Navigate to /#demo - works from any page
+    window.location.href = '/#demo';
   };
-  
+
   return (
     <>
       <nav
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-          scrolled ? 'py-4' : 'py-6'
+          scrolled ? 'py-3' : 'py-5'
         )}
         style={{
           backgroundColor: scrolled ? 'rgba(246, 252, 252, 0.9)' : 'transparent',
@@ -50,29 +46,35 @@ export function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-1">
-          <Logo size={56} />
-          <span className="font-display text-2xl font-bold text-foreground">
-          maxxo<span className="gradient-text">.ai</span>
-          </span>
+          <a href="/" className="flex items-center">
+            <Image
+              src="/logo-full.svg"
+              alt="Maxxo.ai"
+              width={175}
+              height={40}
+              priority
+            />
           </a>
-          
+
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-foreground transition-colors hover:text-accent"
+                className="relative text-sm font-medium text-foreground transition-colors hover:text-accent group"
               >
                 {link.label}
+                {/* Animated underline */}
+                <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-accent transition-all duration-300 ease-out group-hover:w-full" />
               </a>
             ))}
-            <Button onClick={scrollToDemo}>
+            {/* CTA Button with pulse glow */}
+            <Button onClick={navigateToDemo} className="animate-pulse-glow">
               Book a Demo
             </Button>
           </div>
-          
+
           {/* Mobile Menu Button */}
           <button
             className="md:hidden p-2 text-foreground"
@@ -83,7 +85,7 @@ export function Navigation() {
           </button>
         </div>
       </nav>
-      
+
       {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
@@ -94,13 +96,13 @@ export function Navigation() {
             className="fixed inset-0 z-40 md:hidden"
           >
             {/* Backdrop */}
-            <div 
+            <div
               className="absolute inset-0 bg-foreground/20 backdrop-blur-sm"
               onClick={() => setMobileMenuOpen(false)}
             />
-            
+
             {/* Menu Content */}
-            <motion.div 
+            <motion.div
               className="absolute top-20 left-4 right-4 bg-card rounded-2xl shadow-xl p-6"
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
@@ -116,7 +118,7 @@ export function Navigation() {
                     {link.label}
                   </a>
                 ))}
-                <Button onClick={scrollToDemo} className="mt-4 w-full">
+                <Button onClick={navigateToDemo} className="mt-4 w-full">
                   Book a Demo
                 </Button>
               </div>

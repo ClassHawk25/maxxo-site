@@ -1,8 +1,10 @@
 import { Navigation } from '@/components/Navigation';
 import { HeroSection } from '@/components/HeroSection';
+import { StorySection } from '@/components/StorySection';
+import { LimitsSection } from '@/components/LimitsSection';
 import { ProblemSection } from '@/components/ProblemSection';
 import { SolutionSection } from '@/components/SolutionSection';
-import { PlatformSection } from '@/components/PlatformSection';
+import { HowItWorksSection } from '@/components/HowItWorksSection';
 import { FoundersSection } from '@/components/FoundersSection';
 import { DemoFormSection } from '@/components/DemoFormSection';
 import { Footer } from '@/components/Footer';
@@ -17,9 +19,11 @@ export default function Home() {
       <Navigation />
       <main>
         <HeroSection />
+        <StorySection />
+        <LimitsSection />
         <ProblemSection />
         <SolutionSection />
-        <PlatformSection />
+        <HowItWorksSection />
         <FoundersSection />
         <DemoFormSection />
       </main>

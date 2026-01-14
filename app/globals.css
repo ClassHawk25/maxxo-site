@@ -38,6 +38,14 @@
   .animate-gradient-slow {
     animation: gradient-shift 3s ease infinite;
   }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2.5s ease-in-out infinite;
+  }
 }
 
 @keyframes gradient-shift {
@@ -46,6 +54,24 @@
   }
   50% {
     background-position: 100% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(1, 181, 216, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(1, 181, 216, 0.5);
   }
 }
 

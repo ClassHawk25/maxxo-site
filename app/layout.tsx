@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { DM_Sans, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
-import { siteConfig, chatWidgetConfig, analyticsConfig } from '@/lib/constants';
+import { siteConfig, chatWidgetConfig } from '@/lib/constants';
 import Script from 'next/script';
+import { ConsentProvider } from '@/lib/useConsent';
+import { CookieConsent } from '@/components/CookieConsent';
 import './globals.css';
 
 // ============================================================================
@@ -148,8 +150,13 @@ export default function RootLayout({
       </head>
       
       <body className="font-sans">
-        {children}
-        
+        <ConsentProvider>
+          {children}
+
+          {/* Cookie Consent Banner */}
+          <CookieConsent />
+        </ConsentProvider>
+
         {/* ============================================================== */}
         {/* CHAT WIDGET - BotDisplay */}
         {/* ============================================================== */}
@@ -168,46 +175,12 @@ export default function RootLayout({
           data-button-icon={chatWidgetConfig.buttonIcon}
           data-greeting-message={chatWidgetConfig.greetingMessage}
         />
-        
+
         {/* ============================================================== */}
-        {/* GOOGLE ANALYTICS 4 */}
+        {/* ANALYTICS - Loaded dynamically by useConsent based on user consent */}
+        {/* Google Analytics and Meta Pixel are now loaded via the consent system */}
+        {/* Set NEXT_PUBLIC_GA_ID and NEXT_PUBLIC_META_PIXEL_ID in your .env */}
         {/* ============================================================== */}
-        {analyticsConfig.ga4MeasurementId && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${analyticsConfig.ga4MeasurementId}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${analyticsConfig.ga4MeasurementId}');
-              `}
-            </Script>
-          </>
-        )}
-        
-        {/* ============================================================== */}
-        {/* META PIXEL */}
-        {/* ============================================================== */}
-        {analyticsConfig.metaPixelId && (
-          <Script id="meta-pixel" strategy="afterInteractive">
-            {`
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '${analyticsConfig.metaPixelId}');
-              fbq('track', 'PageView');
-            `}
-          </Script>
-        )}
       </body>
     </html>
   );

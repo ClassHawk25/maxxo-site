@@ -1,0 +1,173 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import { AnimatedSection } from './AnimatedSection';
+import { fadeInUp } from '@/lib/constants';
+
+// ============================================================================
+// TEAM REALITY SECTION - "Your Team's Reality"
+// ============================================================================
+
+const dayTimeline = [
+  {
+    time: '7:00am',
+    activity: 'Shift handover',
+    enquiry: '2 form submissions arrive',
+    missed: true,
+  },
+  {
+    time: '11:30am',
+    activity: 'Medication rounds',
+    enquiry: 'Phone rings (missed)',
+    missed: true,
+  },
+  {
+    time: '3:00pm',
+    activity: 'Family meeting',
+    enquiry: 'Website visitor leaves',
+    missed: true,
+  },
+  {
+    time: '6:30pm',
+    activity: 'Dinner service',
+    enquiry: 'Email enquiry arrives',
+    missed: true,
+  },
+  {
+    time: '9:45pm',
+    activity: 'Night staff only',
+    enquiry: '3 people browse website',
+    missed: true,
+  },
+];
+
+export function TeamRealitySection() {
+  return (
+    <AnimatedSection className="py-20 md:py-24 bg-background">
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Header */}
+        <motion.div variants={fadeInUp} className="text-center mb-12">
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 text-foreground">
+            It's Not Your <span className="gradient-text">Team's Fault</span>
+          </h2>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left - Narrative */}
+          <motion.div variants={fadeInUp}>
+            <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
+              <p>
+                Your staff are exceptional. They provide outstanding care to
+                residents, support families through difficult transitions, and
+                hold everything together when it matters most.
+              </p>
+              <p>But they can't be in two places at once.</p>
+              <p>
+                The phone rings during medication rounds. Emails arrive during
+                shift handover. Website visitors browse at 9pm on a Sunday when
+                nobody's at reception.
+              </p>
+              <p>
+                Enquiries don't arrive on a schedule. They come in waves — often
+                at the worst possible times.
+              </p>
+            </div>
+
+            <motion.p
+              className="mt-8 text-xl font-semibold text-foreground border-l-4 border-accent pl-6"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              Your team isn't failing. They're being asked to do something
+              that's structurally impossible.
+            </motion.p>
+          </motion.div>
+
+          {/* Right - A Typical Day Timeline */}
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="font-display text-lg font-semibold text-foreground mb-6">
+                A Typical Day
+              </h3>
+
+              <div className="space-y-4">
+                {dayTimeline.map((item, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex items-center gap-4"
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: '-30px' }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    {/* Left - Time & Activity */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-mono text-muted-foreground">
+                        {item.time}
+                      </p>
+                      <p className="text-foreground font-medium truncate">
+                        {item.activity}
+                      </p>
+                    </div>
+
+                    {/* Arrow */}
+                    <div className="text-muted-foreground/40 flex-shrink-0">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
+
+                    {/* Right - Enquiry */}
+                    <div
+                      className={`flex-1 min-w-0 px-3 py-2 rounded-lg text-right ${
+                        item.missed
+                          ? 'bg-orange-50 border border-orange-200'
+                          : 'bg-muted'
+                      }`}
+                    >
+                      <p
+                        className={`text-sm ${
+                          item.missed
+                            ? 'text-orange-700'
+                            : 'text-muted-foreground'
+                        }`}
+                      >
+                        {item.enquiry}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Legend */}
+              <div className="mt-6 pt-4 border-t border-border">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="w-3 h-3 rounded bg-orange-200" />
+                  <span>Enquiry arriving at inconvenient time</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </AnimatedSection>
+  );
+}

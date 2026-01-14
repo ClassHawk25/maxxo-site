@@ -1,188 +1,125 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, MessageCircle } from 'lucide-react';
+import { ArrowRight, ArrowDown } from 'lucide-react';
 import { Button } from './ui/Button';
-import { fadeInUp, scaleIn, stagger } from '@/lib/constants';
+import { HeroVisual } from './HeroVisual';
+import { fadeInUp, scaleIn, stagger, easeOut } from '@/lib/constants';
 
 // ============================================================================
 // HERO SECTION
 // ============================================================================
 
-const messages = [
-  { from: 'user', text: "Hi, I'm looking for care for my mother..." },
-  { from: 'ai', text: "I'd be happy to help. What type of care are you considering?" },
-  { from: 'user', text: "Residential care, she needs 24/7 support" },
-  { from: 'ai', text: "I understand. We have availability. Would you like to book a tour?" },
-];
+// Page load stagger for hero content
+const heroStagger = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.15, delayChildren: 0.3 }
+  },
+};
 
-// Animation steps for natural conversation flow:
-// 0: User message 1
-// 1: User message 1 + AI typing...
-// 2: User message 1 + AI message 1
-// 3: User message 1 + AI message 1 + User message 2
-// 4: User message 1 + AI message 1 + User message 2 + AI typing...
-// 5: All 4 messages shown
-const getAnimationState = (step: number) => {
-  switch (step) {
-    case 0: return { messageCount: 1, showTyping: false };
-    case 1: return { messageCount: 1, showTyping: true };
-    case 2: return { messageCount: 2, showTyping: false };
-    case 3: return { messageCount: 3, showTyping: false };
-    case 4: return { messageCount: 3, showTyping: true };
-    case 5: return { messageCount: 4, showTyping: false };
-    default: return { messageCount: 1, showTyping: false };
-  }
+const heroFadeInUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: easeOut }
+  },
 };
 
 export function HeroSection() {
-  const [animationStep, setAnimationStep] = useState(0);
-  const { messageCount, showTyping } = getAnimationState(animationStep);
-
-  useEffect(() => {
-    // Different timing: typing indicators show for less time
-    const isTypingStep = animationStep === 1 || animationStep === 4;
-    const delay = isTypingStep ? 1200 : 2000;
-
-    const timer = setTimeout(() => {
-      setAnimationStep((prev) => (prev + 1) % 6);
-    }, delay);
-    return () => clearTimeout(timer);
-  }, [animationStep]);
-  
   const scrollToDemo = () => {
     const demoSection = document.getElementById('demo');
     if (demoSection) {
       demoSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
-  
+
+  const scrollToStory = () => {
+    const storySection = document.getElementById('story');
+    if (storySection) {
+      storySection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden pt-20 bg-background">
-      {/* Background Decorative Elements */}
-      <div 
+      {/* Background Decorative Elements with subtle animation */}
+      <motion.div
         className="absolute top-20 right-0 w-[600px] h-[600px] rounded-full opacity-20 blur-[150px]"
         style={{ backgroundColor: '#01B5D8' }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{
+          opacity: [0.15, 0.25, 0.15],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          opacity: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+          scale: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
+        }}
       />
-      <div 
+      <motion.div
         className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-15 blur-[120px]"
         style={{ backgroundColor: '#90E0EF' }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{
+          opacity: [0.1, 0.2, 0.1],
+          scale: [1, 1.15, 1],
+        }}
+        transition={{
+          opacity: { duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 },
+          scale: { duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 1 },
+        }}
       />
-      
+
       <div className="max-w-7xl mx-auto px-6 py-14 grid lg:grid-cols-2 gap-10 items-center relative z-10">
-        {/* Left Content */}
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate="visible"
-        >
+        {/* Left Content with enhanced page load animation */}
+        <motion.div variants={heroStagger} initial="hidden" animate="visible">
           <motion.h1
-            variants={fadeInUp}
-            className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] mb-8 text-foreground"
+            variants={heroFadeInUp}
+            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] mb-8 text-foreground"
           >
-            Convert More Enquiries Into{' '}
-            <span className="gradient-text">Admissions</span>
+            Never miss an opportunity to{' '}
+            <motion.span
+              className="gradient-text inline-block"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8, duration: 0.6, ease: easeOut }}
+            >
+              connect.
+            </motion.span>
           </motion.h1>
-          
+
           <motion.p
-            variants={fadeInUp}
-            className="text-xl md:text-2xl mb-10 leading-relaxed max-w-xl text-muted-foreground"
+            variants={heroFadeInUp}
+            className="text-lg md:text-xl leading-relaxed text-muted-foreground mb-10"
           >
-            We help care seekers book tours faster. Our AI engages every enquiry instantly, qualifying needs, answering questions, and booking visits before your competitors even respond.
+            Whether families are browsing your website, submitting an enquiry,
+            or picking up the phone, Maxxo.ai ensures you're there. Every
+            channel. Every hour.
           </motion.p>
-          
-          <motion.div variants={fadeInUp} className="flex flex-wrap gap-4">
-            <Button onClick={scrollToDemo}>
-              Demo
+
+          <motion.div variants={heroFadeInUp} className="flex flex-wrap gap-4">
+            {/* Primary CTA with attention glow */}
+            <Button onClick={scrollToDemo} className="animate-pulse-glow">
+              Book a Demo
               <ArrowRight size={20} />
             </Button>
-            <Button variant="secondary" onClick={() => document.getElementById('platform')?.scrollIntoView({ behavior: 'smooth' })}>
-              See How It Works
+            <Button variant="secondary" onClick={scrollToStory}>
+              See the Problem We Solve
+              <ArrowDown size={20} />
             </Button>
           </motion.div>
-          
-          {/* Trust Indicator */}
-          <motion.p variants={fadeInUp} className="mt-12 text-lg text-muted-foreground">
-            Trusted by care providers across the UK
-          </motion.p>
         </motion.div>
-        
-        {/* Right - Animated Chat Visual */}
+
+        {/* Right - Animated Enquiry Flow Visual */}
         <motion.div
-          variants={scaleIn}
-          initial="hidden"
-          animate="visible"
+          initial={{ opacity: 0, scale: 0.9, x: 30 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          transition={{ delay: 0.5, duration: 0.8, ease: easeOut }}
           className="relative hidden lg:block"
         >
-          <div className="relative">
-            {/* Main Chat Window */}
-            <div className="animate-float rounded-3xl p-6 shadow-2xl bg-card">
-              {/* Chat Header */}
-              <div className="flex items-center gap-4 pb-6 border-b border-border">
-                <div className="w-12 h-12 rounded-full gradient-bg-135 flex items-center justify-center">
-                  <MessageCircle className="text-white" size={24} />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">Maxxo AI Assistant</p>
-                  <p className="text-sm flex items-center gap-2 text-accent">
-                    <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    Online now
-                  </p>
-                </div>
-              </div>
-              
-              {/* Chat Messages */}
-              <div className="py-6 space-y-4 min-h-[280px]">
-                {messages.slice(0, messageCount).map((msg, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                        msg.from === 'user' ? 'rounded-br-sm bg-muted text-foreground' : 'rounded-bl-sm gradient-bg-135 text-white'
-                      }`}
-                    >
-                      <p className="text-sm">{msg.text}</p>
-                    </div>
-                  </motion.div>
-                ))}
-                {/* AI Typing Indicator - only shows before AI messages */}
-                {showTyping && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex justify-start"
-                  >
-                    <div className="px-4 py-3 rounded-2xl rounded-bl-sm gradient-bg-135">
-                      <div className="flex gap-1">
-                        {[0, 150, 300].map((delay) => (
-                          <span
-                            key={delay}
-                            className="w-2 h-2 rounded-full bg-white/60 animate-bounce"
-                            style={{ animationDelay: `${delay}ms` }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </div>
-            
-            {/* Floating Stats Cards */}
-            <div className="animate-float-delayed absolute -right-16 -top-4 z-10 rounded-xl p-4 shadow-lg bg-card">
-              <p className="text-2xl font-bold gradient-text">85%</p>
-              <p className="text-xs text-muted-foreground">Response Rate</p>
-            </div>
-            <div className="animate-float absolute -left-16 -bottom-12 z-10 rounded-xl p-4 shadow-lg bg-card">
-              <p className="text-2xl font-bold gradient-text">65%</p>
-              <p className="text-xs text-muted-foreground">Tour Booking Rate</p>
-            </div>
-          </div>
+          <HeroVisual />
         </motion.div>
       </div>
     </section>
