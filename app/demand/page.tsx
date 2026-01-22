@@ -1097,7 +1097,8 @@ export default function DemandPage() {
     }, 2000);
 
     try {
-      const response = await fetch('/api/demand/public', {
+      const apiUrl = process.env.NEXT_PUBLIC_DEMAND_API_URL || 'https://app.maxxo.ai/api/demand/public';
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
