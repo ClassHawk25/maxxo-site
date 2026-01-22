@@ -888,9 +888,14 @@ function ResultsState({
             </div>
 
             {/* Download Button */}
-            <Button size="lg" className="animate-pulse-glow">
+            <Button
+              size="lg"
+              className="animate-pulse-glow"
+              onClick={() => window.open(pdfUrl, '_blank')}
+              disabled={!pdfUrl}
+            >
               <Download size={20} />
-              Download Your Full Report
+              {pdfUrl ? 'Download Your Full Report' : 'Report unavailable'}
             </Button>
             <p className="text-sm text-muted-foreground mt-4">
               Your 7-page PDF includes competitor analysis, query-by-query results, and recommendations
@@ -1080,8 +1085,11 @@ export default function DemandPage() {
   const [scores, setScores] = useState<VisibilityScores | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    if (isSubmitting) return; // Prevent double submission
+    setIsSubmitting(true);
     setPageState('processing');
     setProcessingStep(0);
     setError('');
@@ -1118,9 +1126,47 @@ export default function DemandPage() {
       setProcessingStep(PROCESSING_STEPS.length - 1);
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      setScores(data.scores);
-      setPdfUrl(data.pdfUrl);
-      setPageState('complete');
+      if (data.success) {
+        // Transform API response to frontend format
+        const transformedScores: VisibilityScores = {
+          overall: data.scores.overall,
+          platforms: [
+            {
+              platform: 'ChatGPT',
+              score: data.scores.byPlatform.chatgpt,
+              mentioned: data.scores.byPlatform.chatgpt > 0,
+              queryCount: 7,
+              mentionCount: Math.round((data.scores.byPlatform.chatgpt / 100) * 7),
+            },
+            {
+              platform: 'Claude',
+              score: data.scores.byPlatform.claude,
+              mentioned: data.scores.byPlatform.claude > 0,
+              queryCount: 7,
+              mentionCount: Math.round((data.scores.byPlatform.claude / 100) * 7),
+            },
+            {
+              platform: 'Gemini',
+              score: data.scores.byPlatform.gemini,
+              mentioned: data.scores.byPlatform.gemini > 0,
+              queryCount: 7,
+              mentionCount: Math.round((data.scores.byPlatform.gemini / 100) * 7),
+            },
+            {
+              platform: 'Perplexity',
+              score: data.scores.byPlatform.perplexity,
+              mentioned: data.scores.byPlatform.perplexity > 0,
+              queryCount: 7,
+              mentionCount: Math.round((data.scores.byPlatform.perplexity / 100) * 7),
+            },
+          ],
+          timestamp: new Date().toISOString(),
+        };
+
+        setScores(transformedScores);
+        setPdfUrl(data.pdfUrl);
+        setPageState('complete');
+      }
 
       // Track analytics
       if (typeof window !== 'undefined') {
@@ -1144,6 +1190,7 @@ export default function DemandPage() {
       clearInterval(stepInterval);
       setError(err instanceof Error ? err.message : 'Failed to generate report. Please try again.');
       setPageState('error');
+      setIsSubmitting(false);
       console.error('Report generation error:', err);
     }
   };
@@ -1151,6 +1198,7 @@ export default function DemandPage() {
   const handleRetry = () => {
     setPageState('idle');
     setError('');
+    setIsSubmitting(false);
   };
 
   return (
@@ -1174,7 +1222,7 @@ export default function DemandPage() {
                 formData={formData}
                 setFormData={setFormData}
                 onSubmit={handleSubmit}
-                isSubmitting={false}
+                isSubmitting={isSubmitting}
               />
             </motion.div>
           )}
