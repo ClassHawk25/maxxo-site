@@ -20,6 +20,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import Image from 'next/image';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -436,11 +437,17 @@ function FormSection({
   setFormData,
   onSubmit,
   isSubmitting,
+  turnstileToken,
+  setTurnstileToken,
+  turnstileRef,
 }: {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   onSubmit: () => void;
   isSubmitting: boolean;
+  turnstileToken: string | null;
+  setTurnstileToken: React.Dispatch<React.SetStateAction<string | null>>;
+  turnstileRef: React.RefObject<any>;
 }) {
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
@@ -652,6 +659,17 @@ function FormSection({
               </div>
             </div>
 
+            {/* Turnstile */}
+            <div className="flex justify-center my-4">
+              <Turnstile
+                ref={turnstileRef}
+                siteKey="0x4AAAAAACOeRbeKsWOES4KW"
+                onSuccess={setTurnstileToken}
+                onError={() => setTurnstileToken(null)}
+                onExpire={() => setTurnstileToken(null)}
+              />
+            </div>
+
             {/* Submit Button */}
             <Button
               type="submit"
@@ -662,7 +680,8 @@ function FormSection({
                 !formData.town ||
                 !formData.county ||
                 !formData.email ||
-                formData.careTypes.length === 0
+                formData.careTypes.length === 0 ||
+                !turnstileToken
               }
             >
               {isSubmitting ? (
@@ -1112,6 +1131,8 @@ export default function DemandPage() {
   const [pdfUrl, setPdfUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<any>(null);
 
   const handleSubmit = async () => {
     if (isSubmitting) return; // Prevent double submission
@@ -1137,7 +1158,10 @@ export default function DemandPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          turnstileToken,
+        }),
       });
 
       clearInterval(stepInterval);
@@ -1249,6 +1273,9 @@ export default function DemandPage() {
                 setFormData={setFormData}
                 onSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
+                turnstileToken={turnstileToken}
+                setTurnstileToken={setTurnstileToken}
+                turnstileRef={turnstileRef}
               />
             </motion.div>
           )}
