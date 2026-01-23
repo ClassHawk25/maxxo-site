@@ -527,7 +527,7 @@ function FormSection({
                 onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
                 onFocus={() => setFocusedField('companyName')}
                 onBlur={() => setFocusedField(null)}
-                placeholder="e.g. Sunrise Care Group"
+                placeholder=""
                 className={inputStyles('companyName')}
                 style={inputFocusStyles('companyName')}
                 disabled={isSubmitting}

@@ -32,11 +32,11 @@ const initialFormData: FormData = {
 };
 
 const formFields = [
-  { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'John Smith' },
-  { name: 'company', label: 'Company Name', type: 'text', placeholder: 'Your Care Organisation' },
-  { name: 'jobTitle', label: 'Job Title', type: 'text', placeholder: 'Operations Manager' },
-  { name: 'mobile', label: 'Mobile Number', type: 'tel', placeholder: '07XXX XXXXXX' },
-  { name: 'email', label: 'Email Address', type: 'email', placeholder: 'john@example.com' },
+  { name: 'fullName', label: 'Full Name', type: 'text', placeholder: '' },
+  { name: 'company', label: 'Company Name', type: 'text', placeholder: '' },
+  { name: 'jobTitle', label: 'Job Title', type: 'text', placeholder: '' },
+  { name: 'mobile', label: 'Mobile Number', type: 'tel', placeholder: '' },
+  { name: 'email', label: 'Email Address', type: 'email', placeholder: '' },
 ];
 
 
