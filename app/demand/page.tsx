@@ -46,6 +46,7 @@ interface VisibilityScores {
 
 interface FormData {
   careHomeName: string;
+  companyName: string;
   town: string;
   county: string;
   email: string;
@@ -69,7 +70,7 @@ const PROCESSING_STEPS = [
   { icon: '🔍', label: 'Searching via Claude...', sublabel: 'with web search' },
   { icon: '🌐', label: 'Querying Gemini...', sublabel: 'with Google Search' },
   { icon: '🔎', label: 'Checking Perplexity...', sublabel: 'with web search' },
-  { icon: '🧠', label: 'Checking ChatGPT knowledge base...', sublabel: '' },
+  { icon: '🧠', label: 'Searching via ChatGPT...', sublabel: 'with web search' },
   { icon: '📊', label: 'Analysing results...', sublabel: '' },
   { icon: '📄', label: 'Generating report...', sublabel: '' },
 ];
@@ -505,6 +506,30 @@ function FormSection({
                 className={inputStyles('careHomeName')}
                 style={inputFocusStyles('careHomeName')}
                 required
+                disabled={isSubmitting}
+                whileFocus={{ scale: 1.01 }}
+                transition={{ duration: 0.2 }}
+              />
+            </div>
+
+            {/* Company/Group Name - Optional */}
+            <div>
+              <label
+                htmlFor="companyName"
+                className="block text-sm font-medium mb-2 text-foreground"
+              >
+                Company/Group Name <span className="text-muted-foreground">(optional)</span>
+              </label>
+              <motion.input
+                type="text"
+                id="companyName"
+                value={formData.companyName}
+                onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
+                onFocus={() => setFocusedField('companyName')}
+                onBlur={() => setFocusedField(null)}
+                placeholder="e.g. Sunrise Care Group"
+                className={inputStyles('companyName')}
+                style={inputFocusStyles('companyName')}
                 disabled={isSubmitting}
                 whileFocus={{ scale: 1.01 }}
                 transition={{ duration: 0.2 }}
@@ -1076,6 +1101,7 @@ export default function DemandPage() {
   const [pageState, setPageState] = useState<PageState>('idle');
   const [formData, setFormData] = useState<FormData>({
     careHomeName: '',
+    companyName: '',
     town: '',
     county: '',
     email: '',
