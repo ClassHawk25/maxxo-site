@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { DM_Sans, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import { siteConfig } from '@/lib/constants';
 import { ConsentProvider } from '@/lib/useConsent';
 import { CookieConsent } from '@/components/CookieConsent';
@@ -161,6 +162,9 @@ export default function RootLayout({
         {/* Google Analytics and Meta Pixel are now loaded via the consent system */}
         {/* Set NEXT_PUBLIC_GA_ID and NEXT_PUBLIC_META_PIXEL_ID in your .env */}
         {/* ============================================================== */}
+        
+        {/* Vercel Web Analytics */}
+        <Analytics />
       </body>
     </html>
   );
