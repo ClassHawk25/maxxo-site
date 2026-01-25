@@ -24,6 +24,7 @@ import { Turnstile } from '@marsidev/react-turnstile';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { InterestModal } from '@/components/demand/InterestModal';
 import { fadeInUp, stagger, easeOut } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
@@ -955,7 +956,7 @@ function ResultsState({
 // UPSELL SECTION
 // ============================================================================
 
-function UpsellSection() {
+function UpsellSection({ onOpenInterestModal }: { onOpenInterestModal: () => void }) {
   const options = [
     {
       icon: TrendingUp,
@@ -1005,7 +1006,7 @@ function UpsellSection() {
           <Button
             size="lg"
             variant="secondary"
-            onClick={() => window.location.href = '/#demo'}
+            onClick={onOpenInterestModal}
             className="bg-white text-foreground hover:bg-white/90"
           >
             Talk to Us
@@ -1133,6 +1134,7 @@ export default function DemandPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRef = useRef<any>(null);
+  const [showInterestModal, setShowInterestModal] = useState(false);
 
   const handleSubmit = async () => {
     if (isSubmitting) return; // Prevent double submission
@@ -1303,7 +1305,7 @@ export default function DemandPage() {
                 pdfUrl={pdfUrl}
                 careHomeName={formData.careHomeName}
               />
-              <UpsellSection />
+              <UpsellSection onOpenInterestModal={() => setShowInterestModal(true)} />
             </motion.div>
           )}
 
@@ -1322,6 +1324,14 @@ export default function DemandPage() {
         <FAQSection />
       </main>
       <Footer />
+
+      {/* Interest Modal */}
+      <InterestModal
+        isOpen={showInterestModal}
+        onClose={() => setShowInterestModal(false)}
+        prefilledEmail={formData.email}
+        careHomeName={formData.careHomeName}
+      />
     </>
   );
 }
